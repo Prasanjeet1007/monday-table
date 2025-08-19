@@ -5,7 +5,8 @@ import * as React from "react";
 import {
   ColumnDef, flexRender, getCoreRowModel, useReactTable, getSortedRowModel,
   SortingState, getFilteredRowModel, ColumnOrderState, RowSelectionState, getExpandedRowModel,
-  ColumnResizeMode
+  ColumnResizeMode,
+  RowData
 } from "@tanstack/react-table";
 import { motion, AnimatePresence } from "framer-motion";
 import { deals as initialDeals, Deal } from "@/lib/data";
@@ -127,6 +128,12 @@ function AmountCell({ getValue, row, column, table }: EditableCellProps) {
 }
 
 type MenuState = { x: number; y: number; items: MenuItem[] } | null;
+declare module '@tanstack/react-table' {
+  interface ColumnMeta<TData extends RowData, TValue> {
+    filterVariant?: 'text' | 'select';
+    aggregate?: 'sum' | 'avg';
+  }
+}
 
 export function DealsTable() {
   const [data, setData] = React.useState<Deal[]>(() => [...initialDeals]);
@@ -267,23 +274,29 @@ export function DealsTable() {
     });
   };
 
-  // Header context menu
-  const onHeaderContext = (e: React.MouseEvent, colId: string) => {
-    e.preventDefault();
-    const col = table.getColumn(colId);
-    if (!col) return;
-    setHeaderMenu({
-      x: e.clientX,
-      y: e.clientY,
-      items: [
-        { label: col.getIsVisible() ? "Hide column" : "Show column", onSelect: () => col.toggleVisibility() },
-        { label: "Autosize to fit", onSelect: () => col.setSize(200) },
-        { label: "Sort asc", onSelect: () => col.toggleSorting(false), shortcut: "A" },
-        { label: "Sort desc", onSelect: () => col.toggleSorting(true), shortcut: "Z" },
-        { label: "Clear sort", onSelect: () => col.clearSorting() },
-      ]
-    });
-  };
+// Header context menu
+const onHeaderContext = (e: React.MouseEvent, colId: string) => {
+  e.preventDefault();
+  const col = table.getColumn(colId);
+  if (!col) return;
+  setHeaderMenu({
+    x: e.clientX,
+    y: e.clientY,
+    items: [
+      { 
+        label: col.getIsVisible() ? "Hide column" : "Show column", 
+        onSelect: () => col.toggleVisibility() 
+      },
+      { 
+        label: "Autosize to 200px", 
+        onSelect: () => table.setColumnSizing(old => ({ ...old, [col.id]: 200 })) 
+      },
+      { label: "Sort asc", onSelect: () => col.toggleSorting(false), shortcut: "A" },
+      { label: "Sort desc", onSelect: () => col.toggleSorting(true), shortcut: "Z" },
+      { label: "Clear sort", onSelect: () => col.clearSorting() },
+    ]
+  });
+};
 
   // Keyboard navigation: arrow keys move focus across cells
   const tableRef = React.useRef<HTMLDivElement>(null);

@@ -1,8 +1,7 @@
 
 # Monday-style Deals Table (Static Data)
 
-Interactive table built with **Next.js + TypeScript**, powered by **@tanstack/react-table**, **Zustand**, and **Framer Motion**.  
-No server calls – all interactions are client-only with optional localStorage persistence.
+Interactive table built with **Next.js + TypeScript**
 
 ## ✨ Features Implemented
 - Sticky header + horizontal scroll
@@ -26,8 +25,6 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000
-
 ## 🧩 Tech
 - Next.js 14 (App Router)
 - TypeScript
@@ -45,4 +42,3 @@ Open http://localhost:3000
 
 ---
 
-Made with ❤️

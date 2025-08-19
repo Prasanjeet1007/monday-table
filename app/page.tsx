@@ -16,7 +16,7 @@ export default function Page() {
       </header>
       <DealsTable />
       <footer className="mt-6 text-xs text-slate-500">
-        <p>Static demo. All interactions run client-side only and persist in localStorage.</p>
+        <p>Static demo</p>
       </footer>
     </main>
   );
